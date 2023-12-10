@@ -3,12 +3,9 @@ import express, { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
-import bodyParser from 'body-parser';
 import indexRouter from './routes/index';
-import registerNewUser from './routes/users';
-import usersLoginRouter from './routes/login';
-import signUpRouter from './routes/signup';
-import notesRouter from './routes/notes';
+import authorRouter from './routes/author';
+import booksRouter from './routes/books';
 import session from "express-session";
 
 const app = express();
@@ -19,9 +16,12 @@ app.use(
     saveUninitialized: true,
   })
 );
-app.use(bodyParser.json())
 
-
+const port = 4000;
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
+});
+//app.use(bodyParser.json());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -35,13 +35,10 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 
 app.use('/', indexRouter);
-app.use('/signup', signUpRouter);
-// this is where cookie comes handy, kindly search how to automatically login after signup
-app.use('/login', usersLoginRouter);
-app.use('/users', registerNewUser);
-app.use('/notes', notesRouter);
+app.use('/author', authorRouter);
+app.use('/books', booksRouter);
 
-// catch 404 and forward to error handler
+
 app.use(function(req, res, next) {
   next(createError(404));
 });

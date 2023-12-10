@@ -1,13 +1,13 @@
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('./usersAndNote.db', sqlite3.OPEN_READWRITE, function (err) {
+var db = new sqlite3.Database('./authorAndBook.db', sqlite3.OPEN_READWRITE, function (err) {
     if (err)
         return console.log(err);
 });
-var user_table = "CREATE TABLE Users (\n    UserId INTEGER PRIMARY KEY AUTOINCREMENT,\n    Full_name VARCHAR(50) NOT NULL,\n    Gender CHAR(1),\n    Email VARCHAR(100) NOT NULL UNIQUE,\n    Phone_no CHAR(14) NOT NULL UNIQUE,\n    Address VARCHAR(150),\n    Password VARCHAR(255) NOT NULL\n\n)";
-var note_table = "CREATE TABLE Notes (\n    NoteId INTEGER PRIMARY KEY AUTOINCREMENT,\n    NoteCode VARCHAR(20) GENERATED ALWAYS AS ('database' || NoteId) STORED,\n    UserId INTEGER,\n    Title VARCHAR(255) NOT NULL,\n    Description TEXT,\n    DueDate VARCHAR(25),\n    Status VARCHAR(50),\n    FOREIGN KEY (UserId) REFERENCES Users(UserId)\n)";
-db.run(user_table, function () {
+var author_table = "CREATE TABLE Author (\n    AuthorId INTEGER PRIMARY KEY AUTOINCREMENT,\n    AuthorName VARCHAR(50) NOT NULL,\n    Email VARCHAR(100) NOT NULL UNIQUE,\n    Phone_no CHAR(14) NOT NULL UNIQUE,\n    Password VARCHAR(255) NOT NULL\n\n)";
+var book_table = "CREATE TABLE Books (\n    Title VARCHAR(50) NOT NULL UNIQUE,\n    DatePublished VARCHAR(50),\n    Description TEXT(100),\n    PageCount INTEGER (50),\n    Genre VARCHAR(50),\n    BookId INTEGER PRIMARY KEY AUTOINCREMENT,\n    Publisher VARCHAR(50),\n    AuthorId INTEGER,     \n    FOREIGN KEY (AuthorId) REFERENCES Author(AuthorId)\n)";
+db.run(author_table, function () {
     console.log('user_table created successfully');
 });
-db.run(note_table, function () {
-    console.log('note_table created successfully');
+db.run(book_table, function () {
+    console.log('book_table created successfully');
 });

@@ -1,34 +1,33 @@
 const sqlite3 = require('sqlite3').verbose()
-const db = new sqlite3.Database('./usersAndNote.db', sqlite3.OPEN_READWRITE, (err: any)=>{
+const db = new sqlite3.Database('./authorAndBook.db', sqlite3.OPEN_READWRITE, (err: any)=>{
     if(err) return console.log(err)
 })
 
-const user_table = `CREATE TABLE Users (
-    UserId INTEGER PRIMARY KEY AUTOINCREMENT,
-    Full_name VARCHAR(50) NOT NULL,
-    Gender CHAR(1),
+const author_table = `CREATE TABLE Author (
+    AuthorId INTEGER PRIMARY KEY AUTOINCREMENT,
+    AuthorName VARCHAR(50) NOT NULL,
     Email VARCHAR(100) NOT NULL UNIQUE,
     Phone_no CHAR(14) NOT NULL UNIQUE,
-    Address VARCHAR(150),
     Password VARCHAR(255) NOT NULL
 
 )`
 
-const note_table = `CREATE TABLE Notes (
-    NoteId INTEGER PRIMARY KEY AUTOINCREMENT,
-    NoteCode VARCHAR(20) GENERATED ALWAYS AS ('database' || NoteId) STORED,
-    UserId INTEGER,
-    Title VARCHAR(255) NOT NULL,
-    Description TEXT,
-    DueDate VARCHAR(25),
-    Status VARCHAR(50),
-    FOREIGN KEY (UserId) REFERENCES Users(UserId)
+const book_table = `CREATE TABLE Books (
+    Title VARCHAR(50) NOT NULL UNIQUE,
+    DatePublished VARCHAR(50),
+    Description TEXT(100),
+    PageCount INTEGER (50),
+    Genre VARCHAR(50),
+    BookId INTEGER PRIMARY KEY AUTOINCREMENT,
+    Publisher VARCHAR(50),
+    AuthorId INTEGER,     
+    FOREIGN KEY (AuthorId) REFERENCES Author(AuthorId)
 )`
 
-db.run(user_table, ()=>{
+db.run(author_table, ()=>{
     console.log('user_table created successfully')
 })
-db.run(note_table, ()=>{
-    console.log('note_table created successfully')
+db.run(book_table, ()=>{
+    console.log('book_table created successfully')
 })
 
