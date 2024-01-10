@@ -1,22 +1,21 @@
-import createError from "http-errors";
-import express, { Request, Response, NextFunction } from "express";
-import getAllAuthorController from "../controller/getAllUser";
-import signupController from '../controller/signup';
-import loginController from '../controller/login'
+import express, { Request, Response } from 'express';
+import { authenticate } from '../middleware/jwtAuthenticate';
+import { getAllBooks, getBooksBySingleAuthor, createNewBook, updateBook, deleteBook } from '../controller/bookController';
 
-// implementation start here
 const router = express.Router();
 
-router.use(express.json());
-router.use(express.urlencoded({ extended: false }));
 
-// GET all users route
-router.get("/", getAllAuthorController);
 
-// Creating new user
-router.post("/signup", signupController);
+// router.use(express.json());
+// router.use(express.urlencoded({ extended: false }));
 
-// new user login
-router.post("/login", loginController);
+router.get('/', authenticate, getAllBooks);
+router.get('/author/:author', authenticate, getBooksBySingleAuthor);
+// // creating a new books
+router.post("/", authenticate, createNewBook);
+// // updating a book
+router.put('/:id', authenticate, updateBook);
+// // deleting a book
+router.delete("/", authenticate, deleteBook);
 
-export default router;
+module.exports=router;
